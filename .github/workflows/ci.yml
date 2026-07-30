@@ -1,0 +1,30 @@
+name: CI
+on: [push]
+jobs:
+  run-tests:
+    name: workflow
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Run ESlint
+        run: npm run lint
+
+      - name: Run Jest tests
+        run: npm run test:ci
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          build: npm run build
+          start: npm start
+          wait-on: "http://localhost:3000"
